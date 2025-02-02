@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to A4 Layout</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <script>
+        // Function to reload the page when "Finish" button is clicked
+        function reloadPage() {
+            window.location.reload();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Photo to Create A4 Layout</h1>
+        
+        <!-- Form for file upload -->
+        <form action="upload.php" method="post" enctype="multipart/form-data" target="uploadFrame" onsubmit="showLoading()">
+            <div class="form-group">
+                <label for="imageUpload">Select an image:</label>
+                <input type="file" name="imageUpload" id="imageUpload" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload & Process</button>
+        </form>
+
+        <!-- Hidden iframe to handle the upload without refreshing the page -->
+        <iframe name="uploadFrame" style="display:none;" onload="showFinishButton()"></iframe>
+
+        <!-- Result and finish button section -->
+        <div id="result"></div>
+        <button id="finishButton" class="btn btn-finish" style="display:none;" onclick="reloadPage()">Finish</button>
+    </div>
+
+    <script>
+        // Show loading message during processing
+        function showLoading() {
+            document.getElementById('result').innerHTML = "<p>Processing your image...</p>";
+            document.getElementById('finishButton').style.display = 'none';
+        }
+
+        // Display the Finish button once the iframe load completes (i.e., when upload.php finishes processing)
+        function showFinishButton() {
+            // Check if uploadFrame has any content, meaning the upload is complete
+            const iframeContent = document.getElementsByName('uploadFrame')[0].contentDocument.body.innerHTML;
+            if (iframeContent.trim().length > 0) {
+                document.getElementById('result').innerHTML = iframeContent;
+                document.getElementById('finishButton').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
